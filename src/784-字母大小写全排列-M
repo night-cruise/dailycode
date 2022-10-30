@@ -1,0 +1,30 @@
+// 回溯
+
+impl Solution {
+    pub fn letter_case_permutation(s: String) -> Vec<String> {
+        fn dfs(s: &mut [u8], i: usize, ans: &mut Vec<String>) {
+            if i == s.len() {
+                ans.push(String::from_utf8(s.into()).unwrap());
+                return;
+            }
+            match s[i] {
+                x @ b'A'..=b'Z' => {
+                    s[i] = b'a' + x - b'A';
+                    dfs(s, i + 1, ans);
+                    s[i] = x;
+                },
+                x @ b'a'..=b'z' => {
+                    s[i] = b'A' + x - b'a';
+                    dfs(s, i + 1, ans);
+                    s[i] = x;
+                },
+                _ => {}
+            }
+            dfs(s, i + 1, ans);
+        }
+        let mut s = s.into_bytes();
+        let mut ans = vec![];
+        dfs(&mut s, 0, &mut ans);
+        ans
+    }
+}
