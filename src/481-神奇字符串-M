@@ -1,0 +1,10 @@
+# 字符串S可以看作由[1组]和[2组]交替生成，[1组]和[2组]中的个数由S[i]决定
+
+class Solution:
+    def magicalString(self, n: int) -> int:
+        s = [1, 2, 2]
+        
+        for i in range(2, n):
+            s += [(s[-1] ^ 3)] * s[i]
+        
+        return sum([x for x in s[:n] if x == 1])
