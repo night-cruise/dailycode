@@ -1,0 +1,44 @@
+// 枚举
+
+import "math"
+
+func bestCoordinate(towers [][]int, radius int) []int {
+    xmin, xmax, ymin, ymax := 50, 0, 50, 0
+    for _, tower := range towers {
+        xmin, xmax = min(tower[0], xmin), max(tower[0], xmax)
+        ymin, ymax = min(tower[1], ymin), max(tower[1], ymax)
+    }
+    maxPower, ans := -1, []int{}
+    for x := max(0, xmin - radius); x <= xmax + radius; x++ {
+        for y := max(0, ymin - radius); y <= ymax + radius; y++ {
+            curPower := 0
+            for _, tower := range towers {
+                d := math.Sqrt(float64((x-tower[0])*(x-tower[0]) + (y-tower[1])*(y-tower[1])))
+                if float64(radius) >= d {
+                    curPower += int(float64(tower[2]) / (1 + d))
+                }
+            }
+            if curPower > maxPower {
+                maxPower = curPower
+                ans = []int{x, y}
+            }
+        }
+    }
+    if maxPower == 0 {
+        ans = []int{0, 0}
+    }
+    return ans
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
