@@ -1,0 +1,32 @@
+# 枚举
+
+class Solution:
+    def maxRepeating(self, sequence: str, word: str) -> int:
+        k, cur, i, flag = 0, 0, 0, False
+
+        while i < len(sequence):
+            if sequence[i:i+len(word)] == word:         # 匹配成功
+                cur += 1                                # 重复次数加1
+                i += len(word)                          # 跳过一个字符串长度
+                flag = True                             # 表示本次匹配成功
+            else:                                       # 匹配失败
+                k, cur = max(k, cur), 0                 # 更新k值
+                if flag:                                # 如果上次匹配成功
+                    i -= len(word) - 1                  # 回退一个字符串
+                    flag = False                        # 重置flag
+                else:                                   # 如果上次匹配失败
+                    i += 1                              # 跳过一个字符
+        
+        k = max(k, cur)         
+        return k
+        
+
+# 枚举
+
+class Solution:
+    def maxRepeating(self, sequence: str, word: str) -> int:
+        k = 1
+        while word * k in sequence:
+            k += 1
+        return k-1
+        
