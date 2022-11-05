@@ -1,0 +1,40 @@
+// 栈的使用
+
+impl Solution {
+    pub fn parse_bool_expr(expression: String) -> bool {
+        let exp = expression.into_bytes();
+        let mut st = vec![];
+        
+        for item in exp {
+            if item == b',' {
+                continue;
+            }
+            if item != b')' {
+                st.push(item);
+                continue;
+            }
+            let mut fs = 0;
+            let mut ts = 0;
+            while let Some(ch) = st.pop() {
+                if ch == b'(' {
+                    break;
+                }
+                if ch == b'f' {
+                    fs += 1;
+                } else {
+                    ts += 1;
+                }
+            }
+            let op = st.pop().unwrap();
+            let rs = match op {
+                b'!' => if fs > 0 { b't' } else { b'f' },
+                b'|' => if ts > 0 { b't' } else { b'f' },
+                b'&' => if fs == 0 { b't' } else { b'f' },
+                _ => b't',
+            };
+            st.push(rs);
+        }
+        
+        if st.pop().unwrap() == b't' { true } else { false }
+    }
+}
