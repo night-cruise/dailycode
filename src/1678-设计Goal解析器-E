@@ -1,0 +1,21 @@
+# 字符串遍历
+
+class Solution:
+    def interpret(self, command: str) -> str:
+        ans, flag = [], 0
+        
+        for ch in command:
+            if ch == 'G':
+                ans.append(ch)
+            elif ch == ')':
+                if flag:
+                    ans.append('al')
+                else:
+                    ans.append('o')
+            else:
+                if ch == '(':
+                    flag = 0
+                else:
+                    flag = 1
+                    
+        return ''.join(ans)
