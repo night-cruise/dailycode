@@ -1,0 +1,35 @@
+// 动态规划
+// 设dp[i][j][k]表示在(i, j)位置方向k上的最大的连续的1的数目
+// dp[i][j][0] = if grid[i][j] == 0 { 0 } else { 1 + dp[i-1][j][0] }    上
+// dp[i][j][1] = if grid[i][j] == 0 { 0 } else { 1 + dp[i+1][j][0] }    下
+// dp[i][j][2] = if grid[i][j] == 0 { 0 } else { 1 + dp[i][j-1][0] }    左
+// dp[i][j][1] = if grid[i][j] == 0 { 0 } else { 1 + dp[i][j+1][0] }    右
+// ans = max(dp[i][j] <- min(dp[i][j][k]))
+
+class Solution:
+    def orderOfLargestPlusSign(self, n: int, mines: List[List[int]]) -> int:
+        mines, dp = set(map(tuple, mines)), [[n] * n for _ in range(n)] 
+
+        for i in range(n):
+            count = 0
+            for j in range(n):
+                count = 0 if (i, j) in mines else count + 1
+                dp[i][j] = min(dp[i][j], count)
+            
+            count = 0
+            for j in range(n-1, -1, -1):
+                count = 0 if (i, j) in mines else count + 1
+                dp[i][j] = min(dp[i][j], count)
+        
+        for j in range(n):
+            count = 0
+            for i in range(n):
+                count = 0 if (i, j) in mines else count + 1
+                dp[i][j] = min(dp[i][j], count)
+            
+            count = 0
+            for i in range(n-1, -1, -1):
+                count = 0 if (i, j) in mines else count + 1
+                dp[i][j] = min(dp[i][j], count)
+        
+        return max(map(max, dp))
