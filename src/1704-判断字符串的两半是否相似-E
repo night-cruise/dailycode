@@ -1,0 +1,37 @@
+// 遍历
+
+macro_rules! hashset {
+    ( $( $x:expr ),* ) => {
+        {
+            use std::collections::HashSet;
+            
+            let mut _set = HashSet::new();
+            $(
+                _set.insert($x);
+            )*
+            _set
+        }
+    };
+}
+
+impl Solution {
+    pub fn halves_are_alike(s: String) -> bool {
+        let set = hashset!(b'a', b'e', b'i', b'o', b'u', b'A', b'E', b'I', b'O', b'U');
+        let mut c1 = 0;
+        let mut c2 = 0;
+        let len = s.len();
+
+        for (i, ch) in s.into_bytes().into_iter().enumerate() {
+            if !set.contains(&ch) {
+                continue;
+            }
+            if i < len / 2 {
+                c1 += 1;
+            } else {
+                c2 += 1;
+            }
+        }
+        
+        c1 == c2
+    }
+}
