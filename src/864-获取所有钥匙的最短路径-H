@@ -1,0 +1,130 @@
+// DFS搜索无法解决这个问题，因为每一步可以往回走
+use std::collections::HashSet;
+use std::cmp::min;
+
+const DIRECTIONS: [[i32; 2]; 4] = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+
+impl Solution {
+    pub fn shortest_path_all_keys(grid: Vec<String>) -> i32 {
+        fn dfs(grid: &[Vec<char>], x: usize, y: usize, k: usize, visited: &mut [Vec<bool>], key: &mut HashSet<char>, ans: &mut i32, cur: i32) {
+            if key.len() == k {
+                *ans = min(*ans, cur);
+                return;
+            }
+            for item in DIRECTIONS {
+                let (nx, ny) = ((x as i32 + item[0]) as usize, (y as i32 + item[1]) as usize);
+                
+                if nx >= grid.len() || ny >= grid[0].len() {
+                    continue;
+                }
+                if grid[nx][ny] == '#' || visited[nx][ny] {
+                    continue;
+                }
+                if grid[nx][ny].is_ascii_uppercase() {
+                    if !key.contains(&grid[nx][ny]) {
+                        continue;
+                    }
+                } else if grid[nx][ny].is_ascii_lowercase() {
+                    key.insert(grid[nx][ny].to_ascii_uppercase());
+                }
+                
+                visited[nx][ny] = true;
+                dfs(grid, nx, ny, k, visited, key, ans, cur + 1);
+                visited[nx][ny] = false;
+                
+                if grid[nx][ny].is_ascii_lowercase() {
+                    key.remove(&grid[nx][ny].to_ascii_uppercase());
+                }
+            }
+        }
+        let grid: Vec<Vec<char>> = grid.into_iter().map(|item| item.chars().collect()).collect();
+        let mut visited = vec![vec![false; grid[0].len()]; grid.len()];
+        let mut key = HashSet::new();
+        let mut ans = i32::MAX;
+        let mut k = 0;
+        let mut start = (0, 0);
+        
+        for i in 0..grid.len() {
+            for j in 0..grid[0].len() {
+                if grid[i][j] == '@' {
+                    start = (i, j);
+                } else if grid[i][j].is_ascii_lowercase() {
+                    k += 1;
+                }
+            }
+        }
+        
+        visited[start.0][start.1] = true;
+        dfs(&grid, start.0, start.1, k, &mut visited, &mut key, &mut ans, 0);
+        
+        if ans == i32::MAX { -1 } else { ans }
+    }
+}
+
+// 正确解法：BFS搜索
+use std::collections::{HashSet, VecDeque};
+
+impl Solution {
+    pub fn shortest_path_all_keys(grid: Vec<String>) -> i32 {
+        let grid: Vec<Vec<char>> = grid.into_iter().map(|item| item.chars().collect()).collect();
+        let mut start = (0, 0, 0);
+        let mut k = 0;
+        for i in 0..grid.len() {
+            for j in 0..grid[0].len() {
+                if grid[i][j] == '@' {
+                    start = (i, j, 0);
+                }
+                if grid[i][j].is_ascii_lowercase() {
+                    k += 1;
+                }
+            }
+        }
+        let mut steps = 0;
+        let mut visited = HashSet::new();
+        let mut q = VecDeque::new();
+        let directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+        
+        let mut end = 0;
+        for _ in 0..k {
+            end = end << 1 | 1;
+        }
+        
+        q.push_back(start);
+        while !q.is_empty() {
+            let size = q.len();
+            for _ in 0..size {
+                let pos = q.pop_front().unwrap();
+                if pos.2 == end {
+                    return steps;
+                }
+                for item in directions {
+                    let nx = (pos.0 as i32 + item[0]) as usize;
+                    let ny = (pos.1 as i32 + item[1]) as usize;
+                    if nx >= grid.len() || ny >= grid[0].len() {
+                        continue;
+                    }
+                    if grid[nx][ny] == '#' {
+                        continue;
+                    }
+                    if grid[nx][ny].is_ascii_uppercase() {
+                        if pos.2 & (1 << (grid[nx][ny] as u8 - b'A')) == 0 {
+                            continue;
+                        }
+                    }
+                    let mut next_pos = (nx, ny, pos.2);
+                    if grid[nx][ny].is_ascii_lowercase() {
+                        next_pos.2 |= 1 << (grid[nx][ny] as u8 - b'a');
+                    }
+                    if visited.contains(&next_pos) {
+                        continue;
+                    }
+                    visited.insert(next_pos);
+                    q.push_back(next_pos);
+                }
+            }
+            steps += 1;
+        }
+        
+        -1
+    }
+}
