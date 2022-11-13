@@ -33,7 +33,7 @@ def printMsg(verbose: bool):
     '''打印统计信息'''
     if not verbose:
         print(f'统计'.center(88, '-'))
-        print(f'{"简单:":<8}{len(EASY):>5}')
+        print(f'{"简单:":<8}{len(EASY):5}')
         print(f'{"中等:":<8}{len(MEDIUM):5}')
         print(f'{"困难:":<8}{len(HARD):5}')
         return
