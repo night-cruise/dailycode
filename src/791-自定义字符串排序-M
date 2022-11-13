@@ -1,0 +1,13 @@
+// 排序+哈希表
+
+impl Solution {
+    pub fn custom_sort_string(order: String, s: String) -> String {
+        let (order, mut s) = (order.into_bytes(), s.into_bytes());
+        let mut map = vec![0; 26];
+        order.iter().enumerate().for_each(|(i, &ch)| {
+            map[(ch - b'a') as usize] = i;
+        });
+        s.sort_by(|a, b| map[(a - b'a') as usize].cmp(&map[(b - b'a') as usize]));
+        String::from_utf8(s).unwrap()
+    }
+}
