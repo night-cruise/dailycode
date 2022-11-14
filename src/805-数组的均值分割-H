@@ -1,0 +1,49 @@
+// 折半搜索
+// 设数组nums的长度为n，假设移动k个元素到数组A中，移动n-k个元素到数组B中，此时两个数组的均值相等
+// 则sum(A) / k = sum(B) / (n-k) => sum(A) * (n - k) = sum(B) * k  => sum(nums) / n = sum(A) / k
+// 则将问题转化为在数组中找到若干个元素，让其均值等于nums数组的均值。再将数组中的每个元素减去均值，
+// 则又可以将问题转化为在数组中找到若干个元素，让其和等于0，即sum(nums[i] - sum(nums)/n) = 0，
+// 又因为nums的均值可能不为整数，因此再将数组的每个元素乘以n，即sum(nums[i] * n - sum(nums)) = 0。
+
+// 如果直接使用搜索算法，那么算法的时间复杂度是O(n * 2^n)，时间复杂度偏高，因此可以进行折半搜索，
+// 将数组划分成两半，计算左半数组的和的集合，再计算右半数组的和的集合，然后在左半集合和右半集合中
+// 分别找到一个元素让两者之和等于0，则找到了一个解。
+use std::collections::HashSet;
+
+impl Solution {
+    pub fn split_array_same_average(mut nums: Vec<i32>) -> bool {
+        if nums.len() == 1 {
+            return false;
+        }
+        let (n, m, sum) = (nums.len(), nums.len() / 2, nums.iter().sum::<i32>());
+        nums.iter_mut()
+            .for_each(|num| *num = *num * (n as i32) - sum);
+        let (lsum, rsum) = (nums[..m].iter().sum::<i32>(), nums[m..].iter().sum::<i32>());
+
+        let mut s1 = HashSet::new();
+        for i in 1..(1 << m) {
+            let total = nums[..m]
+                .into_iter()
+                .enumerate()
+                .filter(|(j, _)| i >> j & 1 > 0)
+                .map(|(_, num)| num)
+                .sum::<i32>();
+            if total == 0 {
+                return true;
+            }
+            s1.insert(total);
+        }
+        for i in 1..(1 << (n - m)) {
+            let total = nums[m..]
+                .into_iter()
+                .enumerate()
+                .filter(|(j, _)| i >> j & 1 > 0)
+                .map(|(_, num)| num)
+                .sum::<i32>();
+            if total == 0 || total != rsum && -total != lsum && s1.contains(&-total) {
+                return true;
+            }
+        }
+        false
+    }
+}
