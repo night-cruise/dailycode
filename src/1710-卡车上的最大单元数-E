@@ -1,0 +1,20 @@
+// 贪心算法
+// 尽量选择可以装载的单元数量更多的箱子
+use std::cmp::min;
+
+impl Solution {
+    pub fn maximum_units(mut box_types: Vec<Vec<i32>>, mut truck_size: i32) -> i32 {
+        box_types.sort_by(|a, b| b[1].cmp(&a[1]));
+        let mut ans = 0;
+        
+        for boxt in box_types {
+            ans += min(truck_size, boxt[0]) * boxt[1];
+            truck_size -= min(truck_size, boxt[0]);
+            if truck_size <= 0 {
+                break;
+            }
+        }
+        
+        ans
+    }
+}
