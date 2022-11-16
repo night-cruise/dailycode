@@ -1,0 +1,17 @@
+// 维护最小后缀值
+// 局部倒置一定是全局倒置，因此只需要判断是否存在非局部倒置即可。
+// 即判断是否存在nums[i] > nums[j] && i < j - 1，
+// 等价于判断是否存在nums[i] > min(nums[j], nums[j + 1], ... nums[n-1]), i < j - 1
+
+class Solution:
+    def isIdealPermutation(self, nums: List[int]) -> bool:
+        if len(nums) <= 2:
+            return True
+            
+        minSuffix = nums[-1]
+        for i in range(len(nums)-3, -1, -1):
+            if nums[i] > minSuffix:
+                return False
+            minSuffix = min(minSuffix, nums[i+1])
+            
+        return True
