@@ -1,0 +1,23 @@
+// 分桶
+// 把words中的所有字符串按照首字母分桶，遍历字符串s，根据当前的字符s[i]找到相应的桶，
+// 遍历桶中的字符串w，如果w的长度为1则找到了一个子序列，否则把w的首字符删除，把w[1:]加入到新的桶中，
+// 直到字符串s遍历完毕，则所有的子序列就都可以找到了。
+
+class Solution:
+    def numMatchingSubseq(self, s: str, words: List[str]) -> int:
+        d = defaultdict(deque)
+        for word in words:
+            d[word[0]].append(word)
+        ans = 0
+        for c in s:
+            for _ in range(len(d[c])):
+                w = d[c].popleft()
+                if len(w) == 1:
+                    ans += 1
+                else:
+                    d[w[1]].append(w[1:])
+        return ans
+		
+		
+
+// 
