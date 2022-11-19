@@ -1,0 +1,9 @@
+// 遍历
+
+class Solution:
+    def largestAltitude(self, gain: List[int]) -> int:
+        cur, ans = 0, 0
+        for p in gain:
+            cur += p
+            ans = max(ans, cur)
+        return ans
