@@ -1,0 +1,15 @@
+// 模拟
+// 开始时，把所有的香槟倒在第一个玻璃杯上，如果溢出，则将溢出的香槟均分到下面的两个玻璃杯中，
+// 以此类推，直到得到第query_row层的玻璃杯盛装香槟的体积。
+
+class Solution:
+    def champagneTower(self, poured: int, query_row: int, query_glass: int) -> float:
+        row = [poured]
+        for _ in range(query_row):
+            nRow = [0] * (len(row) + 1)
+            for i in range(len(row)):
+                adds = (row[i] - 1) / 2
+                if adds > 0:
+                    nRow[i], nRow[i + 1] = nRow[i] + adds, nRow[i + 1] + adds
+            row = nRow
+        return min(1, row[query_glass])
