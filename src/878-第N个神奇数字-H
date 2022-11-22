@@ -1,0 +1,11 @@
+class Solution:
+    def nthMagicalNumber(self, n: int, a: int, b: int) -> int:
+        l, r, c, mode = min(a, b), n * min(a, b), lcm(a, b), 10**9 + 7
+        while l < r:
+            mid = l + (r - l) // 2
+            f = mid // a + mid // b - mid // c  # 小于等于mid的神奇数字的个数
+            if n > f:
+                l = mid + 1
+            else:
+                r = mid
+        return l % mode
