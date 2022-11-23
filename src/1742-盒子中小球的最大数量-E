@@ -1,0 +1,21 @@
+// 哈希表
+use std::collections::HashMap;
+
+impl Solution {
+    pub fn count_balls(low_limit: i32, high_limit: i32) -> i32 {
+        fn digit_sum(mut n: i32) -> i32 {
+            let mut sum = 0;
+            while n > 0 {
+                sum += n % 10;
+                n /= 10;
+            }
+            sum
+        }
+        let mut map = HashMap::new();
+        (low_limit..=high_limit).into_iter().for_each(|n| {
+            *map.entry(digit_sum(n)).or_insert(0) += 1;
+        });
+        
+        map.into_iter().map(|(_, v)| v).max().unwrap()
+    }
+}
