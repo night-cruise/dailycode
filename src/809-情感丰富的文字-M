@@ -1,0 +1,80 @@
+// 统计
+impl Solution {
+    pub fn expressive_words(s: String, words: Vec<String>) -> i32 {
+        /// 统计字符串s中相同的连续字符的数量
+        fn count_word(s: String) -> Vec<(char, i32)> {
+            let (mut m, mut s) = (vec![], s.chars());
+            let (mut w, mut c) = (s.next().unwrap(), 1);
+            for ch in s {
+                if ch == w {
+                    c += 1;
+                } else {
+                    m.push((w, c));
+                    w = ch;
+                    c = 1;
+                }
+            }
+            m.push((w, c));
+            m
+        }
+        let s = count_word(s);
+        let words = words.into_iter().map(count_word).collect::<Vec<Vec<(char, i32)>>>();
+
+        let mut res = 0;
+        for word in words {
+            if s.len() != word.len() {
+                continue;
+            }
+            let mut flag = true;
+            for (w1, w2) in s.iter().zip(word.iter()) {
+                if w1.0 != w2.0 || w1.1 < w2.1 || w1.1 > w2.1 && w1.1 < 3 {
+                    flag = false;
+                    break;
+                }
+            }
+            if flag {
+                res += 1;
+            }
+        }
+        
+        res
+    }
+}
+        
+
+// 双指针
+impl Solution {
+    pub fn expressive_words(s: String, words: Vec<String>) -> i32 {
+        fn can_expand(s: &[u8], word: &[u8]) -> bool {
+            let (mut i, mut j) = (0, 0);
+            
+            while i < s.len() && j < word.len() {
+                if s[i] != word[j] {
+                    return false;
+                }
+                let mut ni = i + 1;
+                while ni < s.len() && s[ni] == s[ni - 1] {
+                    ni += 1;
+                }
+                let mut nj = j + 1;
+                while nj < word.len() && word[nj] == word[nj - 1] {
+                    nj += 1;
+                }
+                let counti = ni - i;
+                let countj = nj - j;
+                if counti < countj || counti > countj && counti < 3 {
+                    return false;
+                }
+                i = ni;
+                j = nj;
+            }     
+            
+            i == s.len() && j== word.len()
+        }
+        
+        words
+            .into_iter()
+            .map(|word| if can_expand(s.as_bytes(), word.as_bytes()) { 1 } else { 0 })
+            .sum()
+    }
+}
