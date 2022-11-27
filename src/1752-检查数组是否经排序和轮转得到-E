@@ -1,0 +1,23 @@
+// 直接遍历
+// 通过遍历数组nums找到第一个递减元素的位置i，那么nums[i:]应该是非递减的，并且nums[-1]必须小于等于nums[0]
+
+impl Solution {
+    pub fn check(nums: Vec<i32>) -> bool {
+        let mut x = 1;
+        while x < nums.len() {
+            if nums[x] < nums[x-1] {
+                break;
+            }
+            x += 1;
+        }
+        if x == nums.len() {
+            return true;
+        }
+        for i in x + 1..nums.len() {
+            if nums[i] < nums[i-1] {
+                return false;
+            }
+        }
+        nums[nums.len() - 1] <= nums[0]
+    }
+}
