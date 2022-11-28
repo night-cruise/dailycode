@@ -1,0 +1,22 @@
+// 记忆化搜索
+// solve(nums, k) = max(avg(nums[:i]) + solve(nums[i:], k - 1))
+
+class Solution:
+    def largestSumOfAverages(self, nums: List[int], k: int) -> float:
+        def dfs(nums: List[int], i: int, k: int, m) -> float:
+            if i == len(nums) and k == 0:
+                return 0
+            if i == len(nums) or k == 0:
+                return float('-inf')
+            if (i, k) in m:
+                return m[(i, k)]
+            
+            res, cur = 0, 0
+            for j in range(i, len(nums)):
+                cur += nums[j]
+                res = max(res, cur / (j - i + 1) + dfs(nums, j + 1, k - 1, m))
+                    
+            m[(i, k)] = res
+            return res
+        
+        return dfs(nums, 0, k, {})
