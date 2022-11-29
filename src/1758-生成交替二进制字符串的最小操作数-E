@@ -1,0 +1,35 @@
+// 二次遍历
+// 1. 开头字符串为0，需要进行替换的次数（偶数下标对应字符0，奇数下标对应字符1）
+// 2. 开头字符串为1，需要进行替换的次数（偶数下标对应字符1，奇数下标对应字符0）
+// 1和2得到的结果取最小值
+use std::cmp::min;
+
+impl Solution {
+    pub fn min_operations(s: String) -> i32 {
+        let res1 = s.as_bytes().into_iter().fold((b'0', 0), |acc, &x| {
+            if x == acc.0 {
+                if acc.0 == b'0' { (b'1', acc.1 + 1) } else { (b'0', acc.1 + 1) }
+            } else {
+                (x, acc.1)
+            }
+        }).1;
+        let res2 = s.as_bytes().into_iter().fold((b'1', 0), |acc, &x| {
+            if x == acc.0 {
+                if acc.0 == b'0' { (b'1', acc.1 + 1) } else { (b'0', acc.1 + 1) }
+            } else {
+                (x, acc.1)
+            }
+        }).1;
+        
+        min(res1, res2)
+    }
+}
+
+
+// 更好的写法
+impl Solution {
+    pub fn min_operations(s: String) -> i32 {
+        let (x, y) = s.bytes().enumerate().fold((0, 0), |(a, b), (i, x)| if (x - b'0') as usize != i % 2 { (a + 1, b) } else { (a, b + 1) });
+        x.min(y)
+    }
+}
