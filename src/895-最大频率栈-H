@@ -1,0 +1,22 @@
+// 哈希表和栈
+// 将栈序列分解为多个频率不同的栈序列，每个栈维护同一频率的元素。
+// 当元素入栈时频率增加，将元素加入到更高频率的栈中，低频率栈中的元素不需要出战。
+// 当元素出栈时，将频率最高的栈的栈顶元素出栈即可。
+
+class FreqStack:
+    def __init__(self):
+        self.freq = defaultdict(int)
+        self.groups = defaultdict(list)
+        self.maxFreq = 0
+
+    def push(self, val: int) -> None:
+        self.freq[val] += 1
+        self.groups[self.freq[val]].append(val)
+        self.maxFreq = max(self.maxFreq, self.freq[val])
+
+    def pop(self) -> int:
+        val = self.groups[self.maxFreq].pop()
+        if len(self.groups[self.maxFreq]) == 0:
+            self.maxFreq -= 1
+        self.freq[val] -= 1
+        return val
