@@ -1,0 +1,23 @@
+// 遍历
+
+impl Solution {
+    pub fn nearest_valid_point(x: i32, y: i32, points: Vec<Vec<i32>>) -> i32 {
+        fn manhattan_dist(p1: (i32, i32), p2: (i32, i32)) -> i32 {
+            (p1.0 - p2.0).abs() + (p1.1 - p2.1).abs()
+        }
+        let index = points
+            .into_iter()
+            .enumerate()
+            .rev()
+            .fold((usize::MAX, i32::MAX), |acc, (i, p)| {
+                if (p[0] == x || p[1] == y) && manhattan_dist((x, y), (p[0], p[1])) <= acc.1 {
+                    (i, manhattan_dist((x, y), (p[0], p[1])))
+                } else {
+                    acc
+                }
+            })
+            .0;
+
+            if index == usize::MAX { -1 } else { index as i32 }
+    }
+}
