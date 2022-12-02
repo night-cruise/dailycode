@@ -1,0 +1,55 @@
+// 暴力解：双重循环
+impl Solution {
+    pub fn min_operations(boxes: String) -> Vec<i32> {
+        let vec = boxes
+            .chars()
+            .enumerate()
+            .filter(|&(_, w)| w == '1')
+            .map(|(i, _)| i as i32)
+            .collect::<Vec<i32>>();
+            
+        (0..boxes.len() as i32)
+            .into_iter()
+            .map(|i| vec.iter().map(|&j| (j - i).abs()).sum())
+            .collect()
+    }
+}
+
+
+// 根绝前一个盒子的操作数得到下一个盒子的操作数
+// 假设当前盒子的操作数为operationi，当前盒子及其左边的小球数为lefti，当前小球及其右边的小球数为righti，
+// 那么把所有小球移动到下一个盒子的操作数为operationi + lefti - righti，
+// 因为原来左边的lefti的小球各需要多操作一步，原来右边的righti个小球个需要少操作一步，
+// 计算出operationi+1后需要根据boxs[i+1]中是否有小球来更新lefti+1和righti+1
+impl Solution {
+    pub fn min_operations(boxes: String) -> Vec<i32> {
+        let mut left = 0;
+        let mut right = 0;
+        let mut operation = 0;
+
+        let boxes = boxes.chars().collect::<Vec<char>>();
+
+        if boxes[0] == '1' {
+            left = 1;
+        }
+        for i in 1..boxes.len() {
+            if boxes[i] == '1' {
+                right += 1;
+                operation += i as i32;
+            }
+        }
+        let mut ans = vec![operation; boxes.len()];
+
+        for i in 1..boxes.len() {
+            operation += left - right;
+
+            if boxes[i] == '1' {
+                left += 1;
+                right -= 1;
+            }
+            ans[i] = operation;
+        }
+
+        ans
+    }
+}
