@@ -19,9 +19,9 @@ def summary(verbose: bool):
             HARD.append((number, name, '困难'))
         
         if verbose:
-            EASY.sort(key=lambda x: x[0])
-            MEDIUM.sort(key=lambda x: x[0])
-            HARD.sort(key=lambda x: x[0])
+            EASY.sort(key=lambda x: int(x[0]))
+            MEDIUM.sort(key=lambda x: int(x[0]))
+            HARD.sort(key=lambda x: int(x[0]))
 
 
 def countsGBK(name: str) -> int:
