@@ -1,0 +1,21 @@
+// 遍历
+
+impl Solution {
+    pub fn second_highest(s: String) -> i32 {
+        s.chars()
+            .fold((-1, -1), |acc, w| match w.to_digit(10) {
+                Some(x) => {
+                    let x = x as i32;
+                    if x > acc.0 {
+                        (x, acc.0)
+                    } else if x > acc.1 && x < acc.0 {
+                        (acc.0, x)
+                    } else {
+                        acc
+                    }
+                }
+                None => acc,
+            })
+            .1
+    }
+}
