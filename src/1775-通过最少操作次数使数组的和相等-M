@@ -1,0 +1,37 @@
+// 贪心 + 哈希表
+use std::cmp::Ordering;
+
+impl Solution {
+    pub fn min_operations(nums1: Vec<i32>, nums2: Vec<i32>) -> i32 {
+        let s1 = nums1.iter().sum::<i32>();
+        let s2 = nums2.iter().sum::<i32>();
+        let mut diff = (s1 - s2).abs();
+        let mut range = [0; 6];
+        let mut ans = 0;
+        
+        let (bigger, smaller) = match s1.cmp(&s2) {
+            Ordering::Greater => (nums1, nums2),
+            Ordering::Less => (nums2, nums1),
+            Ordering::Equal => return 0,
+        };
+        
+        smaller.into_iter().for_each(|num| {
+            range[6 - num as usize] += 1;
+        });
+        bigger.into_iter().for_each(|num| {
+            range[num as usize - 1] += 1;
+        });
+        
+        for i in (0..range.len()).rev() {
+            while diff > 0 && range[i] > 0 {
+                diff -= i as i32;
+                range[i] -= 1;
+                ans += 1;
+            }
+            if diff <= 0 {
+                return ans;
+            }
+        }
+        -1
+    }
+}
