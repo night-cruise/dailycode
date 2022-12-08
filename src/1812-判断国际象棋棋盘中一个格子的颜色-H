@@ -1,0 +1,11 @@
+// 找规律 + 位运算
+
+impl Solution {
+    pub fn square_is_white(coordinates: String) -> bool {
+        let mut xy = coordinates.into_bytes();
+        let x = xy[0] - b'a' + 1;
+        let y = xy[1] - b'0';
+
+        (x ^ y) & 1 > 0
+    }
+}
