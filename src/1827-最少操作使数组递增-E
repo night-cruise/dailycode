@@ -1,0 +1,16 @@
+// 贪心 + 遍历
+// 为了使得nums数组严格递增，对于nums[i]来说，最少递增次数为max(0, nums[i-1] + 1 - nums[i])
+use std::cmp::max;
+
+impl Solution {
+    pub fn min_operations(mut nums: Vec<i32>) -> i32 {
+        let mut counter = 0;
+
+        for i in 1..nums.len() {
+            counter += max(0, nums[i-1] + 1 - nums[i]);
+			nums[i] = max(nums[i], nums[i-1] + 1);
+        }
+
+        counter
+    }
+}
