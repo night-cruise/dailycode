@@ -1,0 +1,25 @@
+// 排序 + 动态规划
+// 设dp[i]表示排序后的前i个长方体将第i个长方体置于底部时的最大堆叠高度。
+// dp[i] = max(dp[j]) + hi,  j < i && wj <= wi && lj <= li
+// dp[0] = h0
+use std::cmp::max;
+
+impl Solution {
+    pub fn max_height(mut cuboids: Vec<Vec<i32>>) -> i32 {
+        cuboids.iter_mut().for_each(|cuboid| cuboid.sort());
+        cuboids.sort();
+
+        let mut dp = vec![0; cuboids.len()];
+        
+        for i in 0..cuboids.len() {
+            for j in 0..i {
+                if cuboids[j][1] <= cuboids[i][1] && cuboids[j][2] <= cuboids[i][2] {
+                    dp[i] = max(dp[i], dp[j]);
+                }
+            }
+            dp[i] += cuboids[i][2];
+        }
+        
+        dp.into_iter().max().unwrap()
+    }
+}
