@@ -1,0 +1,16 @@
+// 哈希表
+use std::collections::HashSet;
+
+impl Solution {
+    pub fn check_if_pangram(sentence: String) -> bool {
+        sentence.chars().collect::<HashSet<char>>().len() == 26
+    }
+}
+
+
+// 位运算
+impl Solution {
+    pub fn check_if_pangram(sentence: String) -> bool {
+        sentence.bytes().fold(0i32, |acc, w| acc | (1 << (w - b'a'))).count_ones() == 26
+    }
+}
