@@ -1,0 +1,13 @@
+// 遍历
+
+class Solution:
+    def getLucky(self, s: str, k: int) -> int:
+        ans = ""
+        for w in s:
+            ans += str(ord(w) - ord('a') + 1)
+        for _ in range(k):
+            sum = 0
+            for w in ans:
+                sum += int(w)
+            ans = str(sum)
+        return int(ans)
