@@ -1,0 +1,14 @@
+// 双指针
+
+class Solution:
+    def canChoose(self, groups: List[List[int]], nums: List[int]) -> bool:
+        i, j = 0, 0
+
+        while i < len(groups) and j < len(nums):
+            if nums[j] != groups[i][0] or groups[i] != nums[j: j + (len(groups[i]))]:
+                j += 1
+            else:
+                j += len(groups[i])
+                i += 1
+        
+        return i == len(groups)
