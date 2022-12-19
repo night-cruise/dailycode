@@ -1,0 +1,47 @@
+// DFS搜索
+
+impl Solution {
+    pub fn valid_path(n: i32, edges: Vec<Vec<i32>>, source: i32, destination: i32) -> bool {
+        let mut graph = vec![vec![]; n as usize];
+        for edge in edges {
+            graph[edge[0] as usize].push(edge[1] as usize);
+            graph[edge[1] as usize].push(edge[0] as usize);
+        }
+        let mut visited = vec![false; n as usize];
+        Self::dfs(&graph, source as usize, &mut visited, destination as usize)
+    }
+
+    fn dfs(graph: &[Vec<usize>], v: usize, visited: &mut [bool], dest: usize) -> bool {
+        if v == dest {
+            return true;
+        }
+        if visited[v] {
+            return false;
+        }
+        visited[v] = true;
+        for &w in &graph[v] {
+            if Self::dfs(graph, w, visited, dest) {
+                return true;
+            }
+        }
+        false
+    }
+}
+
+
+// 并查集
+class Solution:
+    def validPath(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
+        # 并查集
+        fa = list(range(n))
+        def find(x: int) -> int:
+            if fa[x] != x:
+                fa[x] = find(fa[x])
+            return fa[x]
+        def merge(from_: int, to: int):
+            fa[find(from_)] = find(to)
+        
+        for edge in edges:
+            merge(edge[0], edge[1])
+        
+        return find(source) == find(destination)
