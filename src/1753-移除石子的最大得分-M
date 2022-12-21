@@ -1,0 +1,43 @@
+// 贪心算法
+// 优先从较大的两个石子堆中取石头
+
+impl Solution {
+    pub fn maximum_score(mut a: i32, mut b: i32, mut c: i32) -> i32 {
+        let mut score = 0;
+        while a > 0 && b > 0 || a > 0 && c > 0 || b > 0 && c > 0 {
+            if a >= c && b >= c {
+                score += 1;
+                a -= 1;
+                b -= 1;
+            }
+            else if a >= b && c >= b {
+                score += 1;
+                a -= 1;
+                c -= 1;
+            }
+            else if b >= a && c >= a {
+                score += 1;
+                b -= 1;
+                c -= 1;
+            }
+        }
+        score
+    }
+}
+
+
+// 贪心算法
+// 设 a <= b <= c，如果a + b <= c，那么 a + b 中的每颗石子都可以和c中的石子配对
+// 如果 a + b > c，那么 c 中的每颗石子都可以和 a + b 中的石子配对，再把 a 和 b
+// 中剩下的石子两两配对即可
+use std::cmp::max;
+
+impl Solution {
+    pub fn maximum_score(mut a: i32, mut b: i32, mut c: i32) -> i32 {
+        let s = a + b + c;
+        let max_val = max(max(a, b), c);
+
+        if s <= 2 * max_val { s - max_val } else { s / 2 }
+    }
+}
+
