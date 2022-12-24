@@ -1,0 +1,28 @@
+// 遍历
+
+impl Solution {
+    pub fn final_value_after_operations(operations: Vec<String>) -> i32 {
+        operations.into_iter().fold(0, |acc, x| {
+            let x = x.into_bytes();
+            match x[0] {
+                b'+' => acc + 1,
+                b'-' => acc - 1,
+                _ => match x[2] {
+                    b'+' => acc + 1,
+                    b'-' => acc - 1,
+                    _ => acc,
+                },
+            }
+        })
+    }
+}
+
+class Solution:
+    def finalValueAfterOperations(self, operations: List[str]) -> int:
+        ans = 0
+        for op in operations:
+            if '+' in op:
+                ans += 1
+            else:
+                ans -= 1
+        return ans
