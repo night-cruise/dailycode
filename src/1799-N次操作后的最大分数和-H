@@ -1,0 +1,33 @@
+// 记忆化搜索
+use std::collections::HashMap;
+use std::cmp::max;
+
+impl Solution {
+    pub fn max_score(nums: Vec<i32>) -> i32 {
+        fn gcd(a: i32, b: i32) -> i32 {
+            if b == 0 { a } else { gcd(b, a % b) }
+        }
+        fn helper(nums: &[i32], n: i32, path: i32, target: i32, map: &mut HashMap<i32, i32>) -> i32 {
+            if let Some(val) = map.get(&path) {
+                return *val;
+            }
+            if path == target {
+                return 0;
+            }
+            let mut max_score = 0;
+            for i in 0..nums.len() {
+                for j in i + 1..nums.len() {
+                    if (path & (1 << i)) > 0 || (path & (1 << j)) > 0 {
+                        continue;
+                    }
+                    let score = n * gcd(nums[i], nums[j]) + helper(nums, n + 1, path | (1 << i) | (1 << j), target, map);
+                    max_score = max(max_score, score);
+                }
+            }
+            map.insert(path, max_score);
+            max_score
+        }
+        let mut map = HashMap::new();
+        helper(&nums, 1, 0, (1 << nums.len()) - 1, &mut map)
+    }
+}
